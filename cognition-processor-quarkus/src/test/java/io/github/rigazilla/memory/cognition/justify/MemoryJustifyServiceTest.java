@@ -283,3 +283,5 @@ class MemoryJustifyServiceTest {
         bb.putLong(parsedUuid.getLeastSignificantBits());
         return com.google.protobuf.ByteString.copyFrom(bb.array());
     }
+
+}
