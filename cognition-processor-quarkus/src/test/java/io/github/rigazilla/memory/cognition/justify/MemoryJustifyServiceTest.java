@@ -225,25 +225,61 @@ class MemoryJustifyServiceTest {
         assertNotNull(service);
     }
 
-    // Helper methods for constructing test data
+    // Helper methods for constructing test data properly
     private AdminMemoryItem createMemory(String id, String content, double confidence, List<String> citations, String conversationId, List<String> entryIds) {
-        // Implementation support helper based on existing codebase patterns
-        return AdminMemoryItem.newBuilder().build();
+        AdminMemoryItem.Builder builder = AdminMemoryItem.newBuilder()
+            .setId(uuidToBytes(id))
+            .setContent(content)
+            .setConfidence(confidence)
+            .addAllCitations(citations)
+            .setConversationId(conversationId)
+            .addAllEntryIds(entryIds.stream().map(this::uuidToBytes).collect(java.util.stream.Collectors.toList()));
+        return builder.build();
     }
 
     private Entry createUserEntry(String id, String text) {
-        return Entry.newBuilder().build();
+        return Entry.newBuilder()
+            .setId(uuidToBytes(id))
+            .addContent(Value.newBuilder()
+                .setStructValue(Struct.newBuilder()
+                    .putFields("role", Value.newBuilder().setStringValue("USER").build())
+                    .putFields("text", Value.newBuilder().setStringValue(text).build())
+                    .build())
+                .build())
+            .setCreatedAt("2026-08-04T10:00:00Z")
+            .build();
     }
 
     private Entry createAiEntry(String id, String text) {
-        return Entry.newBuilder().build();
+        return Entry.newBuilder()
+            .setId(uuidToBytes(id))
+            .addContent(Value.newBuilder()
+                .setStructValue(Struct.newBuilder()
+                    .putFields("role", Value.newBuilder().setStringValue("AI").build())
+                    .putFields("events", createCompletedEvent(text))
+                    .build())
+                .build())
+            .setCreatedAt("2026-08-04T10:00:00Z")
+            .build();
     }
 
     private Value createCompletedEvent(String text) {
-        return Value.newBuilder().build();
+        Struct eventStruct = Struct.newBuilder()
+            .putFields("type", Value.newBuilder().setStringValue("Completed").build())
+            .putFields("text", Value.newBuilder().setStringValue(text).build())
+            .build();
+        
+        return Value.newBuilder()
+            .setListValue(com.google.protobuf.ListValue.newBuilder()
+                .addValues(Value.newBuilder().setStructValue(eventStruct).build())
+                .build())
+            .build();
     }
 
     private com.google.protobuf.ByteString uuidToBytes(String uuid) {
-        return com.google.protobuf.ByteString.EMPTY;
+        java.util.UUID parsedUuid = java.util.UUID.fromString(uuid);
+        java.nio.ByteBuffer bb = java.nio.ByteBuffer.wrap(new byte[16]);
+        bb.putLong(parsedUuid.getMostSignificantBits());
+        bb.putLong(parsedUuid.getLeastSignificantBits());
+        return com.google.protobuf.ByteString.copyFrom(bb.array());
     }
-}
