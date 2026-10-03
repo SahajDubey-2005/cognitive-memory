@@ -230,7 +230,7 @@ class MemoryJustifyServiceTest {
         AdminMemoryItem.Builder builder = AdminMemoryItem.newBuilder()
             .setId(uuidToBytes(id))
              // .setContent() ki jagah .setText() use kiya hai
-            .setConfidence(confidence)
+            
             .addAllCitations(citations)
             .setConversationId(conversationId)
             .addAllEntryIds(entryIds.stream().map(this::uuidToBytes).collect(java.util.stream.Collectors.toList()));
@@ -284,4 +284,5 @@ class MemoryJustifyServiceTest {
         return com.google.protobuf.ByteString.copyFrom(bb.array());
     }
 }
+
 
