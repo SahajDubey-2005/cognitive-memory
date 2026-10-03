@@ -226,13 +226,11 @@ class MemoryJustifyServiceTest {
     }
 
     // Helper methods for constructing test data properly
-    private AdminMemoryItem createMemory(String id, String content, double confidence, List<String> citations, String conversationId, List<String> entryIds) {
+        private AdminMemoryItem createMemory(String id, String content, double confidence, List<String> citations, String conversationId, List<String> entryIds) {
         AdminMemoryItem.Builder builder = AdminMemoryItem.newBuilder()
             .setId(uuidToBytes(id))
-             // .setContent() ki jagah .setText() use kiya hai
-            
-            .addAllCitations(citations)
             .setConversationId(conversationId)
+            .addAllCitations(citations)
             .addAllEntryIds(entryIds.stream().map(this::uuidToBytes).collect(java.util.stream.Collectors.toList()));
         return builder.build();
     }
@@ -284,5 +282,6 @@ class MemoryJustifyServiceTest {
         return com.google.protobuf.ByteString.copyFrom(bb.array());
     }
 }
+
 
 
