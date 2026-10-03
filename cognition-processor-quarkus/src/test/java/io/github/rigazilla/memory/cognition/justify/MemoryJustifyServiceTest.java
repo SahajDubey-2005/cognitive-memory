@@ -229,7 +229,7 @@ class MemoryJustifyServiceTest {
     private AdminMemoryItem createMemory(String id, String content, double confidence, List<String> citations, String conversationId, List<String> entryIds) {
         AdminMemoryItem.Builder builder = AdminMemoryItem.newBuilder()
             .setId(uuidToBytes(id))
-            .setText(content) // .setContent() ki jagah .setText() use kiya hai
+             // .setContent() ki jagah .setText() use kiya hai
             .setConfidence(confidence)
             .addAllCitations(citations)
             .setConversationId(conversationId)
@@ -284,3 +284,4 @@ class MemoryJustifyServiceTest {
         return com.google.protobuf.ByteString.copyFrom(bb.array());
     }
 }
+
